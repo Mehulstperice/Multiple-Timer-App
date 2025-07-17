@@ -1,70 +1,162 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# ⏱️ Multi‑Timer Management App (React)
 
-## Available Scripts
+A web application to create, manage, and visualize multiple timers grouped by categories, with bulk actions, edit/delete, search, and live progress.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+✅ **Add Timers** with:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* Name
+* Duration (Hours, Minutes, Seconds)
+* Category
 
-### `npm test`
+✅ **Manage Timers**:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Start / Pause / Reset individual timers
+* Bulk Start / Pause / Reset per category
+* Delete individual timers or entire categories
+* Edit name, duration, category
 
-### `npm run build`
+✅ **Grouping**:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* Timers are grouped by category
+* Expand/collapse categories
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+✅ **Search & Filter**:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* Search by timer name or category
 
-### `npm run eject`
+✅ **Live Progress**:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* Progress bar in cards
+* Circular live progress in a modal
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+✅ **Alerts & Notifications**:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* Toast notification when timer reaches 50% duration
+* Toast notification on completion
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+✅ **Theme**:
 
-## Learn More
+* Light/Dark theme switch
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+✅ **History**:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* Log of completed timers on History screen
 
-### Code Splitting
+✅ **Persistence**:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* Data saved in `localStorage` so timers persist between page reloads
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 📂 Project Structure
 
-### Making a Progressive Web App
+```
+src/
+ ├── App.js                 // Context, Reducer, Persistence
+ ├── styles.css             // Global styling
+ ├── screens/
+ │    ├── HomeScreen.js     // Main page: add/search/timers
+ │    └── HistoryScreen.js  // Completed timers log
+ ├── components/
+ │    ├── CategorySection.js// Category group UI & bulk actions
+ │    ├── TimerCard.js      // Timer card with progress/edit/delete
+ │    └── TimerModal.js     // Modal with circular progress
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## 🏗️ High‑Level Architecture
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* **React** with `useReducer` for state management.
+* **Context API** (`TimerContext`) to share timers/history/actions.
+* **React Router** for navigation between Home and History.
+* **Local Storage** for persistence.
+* **React‑Toastify** for non‑blocking notifications.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🔧 Low‑Level Implementation Details
 
-### `npm run build` fails to minify
+### Data Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```js
+{
+  id: "unique_id",
+  name: "Workout Timer",
+  duration: 3600, // total seconds
+  remaining: 1800,
+  category: "Workout",
+  status: "Paused" // Running | Paused | Completed
+}
+```
+
+### Reducer Actions
+
+* `LOAD_DATA`: Load timers/history from storage
+* `SET_TIMERS`: Update timers list
+* `SET_HISTORY`: Update history list
+
+### Timer Ticking
+
+* `setInterval` (1 second):
+
+  * Decrement `remaining` for all running timers
+  * If `remaining === duration/2`: show halfway toast
+  * If `remaining === 0`: mark complete, add to history
+
+### UI Components
+
+* **HomeScreen**: add/search, renders `CategorySection`
+* **CategorySection**: expand/collapse, bulk actions, delete category
+* **TimerCard**: shows timer info, progress, edit/delete buttons
+* **TimerModal**: shows circular progress, start/pause/reset
+
+### Styling
+
+* `styles.css` for:
+
+  * `.actions-bar`: Add Timer left, Search right
+  * Responsive layouts
+  * Hover effects & transitions
+  * Dark/Light theme classes
+
+---
+
+## 📦 Installation & Setup
+
+1. **Clone this repo:**
+
+```bash
+git clone https://github.com/yourusername/multi-timer-app.git
+cd multi-timer-app
+```
+
+2. **Install dependencies:**
+
+```bash
+npm install
+```
+
+3. **Run development server:**
+
+```bash
+npm start
+```
+
+Your app will run at [http://localhost:3000](http://localhost:3000).
+
+---
+
+## 🛠️ Built With
+
+* [React](https://reactjs.org/)
+* [React Router](https://reactrouter.com/)
+* [React Toastify](https://fkhadra.github.io/react-toastify/)
+* CSS (no heavy frameworks)
+
+---
